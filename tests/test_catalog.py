@@ -45,12 +45,13 @@ def test_sort(login_page):
     assert price_high_low
 
 
-# def test_product_card(page: Page) -> None:
-#     page.goto(shop, wait_until="commit")
-#
-#     page.locator('.picture').first.click()
-#     expect(page.locator('[itemprop="image"]')).to_be_visible()
-#     expect(page.locator('.product-name')).to_be_visible()
-#     expect(page.locator('.short-description')).to_be_visible()
-#     expect(page.locator('.qty-input')).to_be_visible()
-#     expect(page.locator('.add-to-cart-panel').locator('[value="Add to cart"]')).to_be_visible()
+def test_product_card(login_page):
+    page = login_page.login()
+
+    page.locator('.inventory_item_name ').first.click()
+
+    expect(page.locator('.inventory_details_img')).to_be_visible()
+    expect(page.locator('.inventory_details_name')).to_be_visible()
+    expect(page.locator('.inventory_details_desc')).to_be_visible()
+    expect(page.locator('.inventory_details_price')).to_be_visible()
+    expect(page.locator('#add-to-cart')).to_be_visible()
