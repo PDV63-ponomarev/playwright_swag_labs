@@ -1,0 +1,21 @@
+name: autotests demo-shop
+
+on: [push]
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    name: Run tests
+    steps:
+      - name: Checkout autotest
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Install playwright
+        run: playwright install
+      - name: run tests
+        run: pytest
