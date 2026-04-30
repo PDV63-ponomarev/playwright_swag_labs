@@ -1,15 +1,54 @@
 import allure
 from allure_commons.types import AttachmentType
+from playwright.sync_api import Page
 
-def add_screenshot(browser):
-    png = browser.driver.get_screenshot_as_png()
-    allure.attach(body=png, name='screenshot', attachment_type=AttachmentType.PNG, extension='.png')
+def add_screenshot(page: Page, name="screenshot"):
+    """Добавление скриншота"""
+    png = page.screenshot(full_page=True)
+    allure.attach(
+        body=png,
+        name=name,
+        attachment_type=AttachmentType.PNG,
+        extension='.png'
+    )
 
-def add_logs(browser):
-    log = "".join(f'{text}\n' for text in browser.driver.get_log(log_type='browser'))
-    allure.attach(log, 'browser_logs', AttachmentType.TEXT, '.log')
 
-def add_html(browser):
-    html = browser.driver.page_source
-    allure.attach(html, 'page_source', AttachmentType.HTML, '.html')
+def add_logs(page: Page, name="browser_logs"):
+    """Добавление логов браузера"""
+    logs = []
+    # Собираем консольные сообщения
+    def handle_console(msg):
+        logs.append(f"[{msg.type}] {msg.text}")
+    # Временно подписываемся на события
+    page.on("console", handle_console)
+    page.evaluate("console.log('Playwright log capture started')")
+    # Небольшая задержка для сбора логов
+    page.wait_for_timeout(100)
+    # Отписываемся
+    page.remove_listener("console", handle_console)
 
+    if logs:
+        log_text = "\n".join(logs)
+        allure.attach(
+            log_text,
+            name=name,
+            attachment_type=AttachmentType.TEXT,
+            extension='.log'
+        )
+
+
+def add_html(page: Page, name="page_source"):
+    """Добавление HTML страницы"""
+    html = page.content()
+    allure.attach(
+        html,
+        name=name,
+        attachment_type=AttachmentType.HTML,
+        extension='.html'
+    )
+
+def add_all(page: Page):
+    """Добавить все аттачи"""
+    add_screenshot(page)
+    add_logs(page)
+    add_html(page)
