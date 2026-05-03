@@ -2,18 +2,17 @@ import allure
 from allure_commons.types import AttachmentType
 from playwright.sync_api import Page
 
-def add_screenshot(page: Page, name="screenshot"):
+def add_screenshot(page: Page):
     """Добавление скриншота"""
     png = page.screenshot(full_page=True)
     allure.attach(
         body=png,
-        name=name,
+        name='screenshot',
         attachment_type=AttachmentType.PNG,
         extension='.png'
     )
 
-
-def add_logs(page: Page, name="browser_logs"):
+def add_logs(page: Page):
     """Добавление логов браузера"""
     logs = []
     # Собираем консольные сообщения
@@ -31,24 +30,23 @@ def add_logs(page: Page, name="browser_logs"):
         log_text = "\n".join(logs)
         allure.attach(
             log_text,
-            name=name,
+            name='browser_logs',
             attachment_type=AttachmentType.TEXT,
             extension='.log'
         )
 
-
-def add_html(page: Page, name="page_source"):
+def add_html(page: Page):
     """Добавление HTML страницы"""
     html = page.content()
     allure.attach(
         html,
-        name=name,
+        name='page_source',
         attachment_type=AttachmentType.HTML,
         extension='.html'
     )
 
-def add_all(page: Page):
-    """Добавить все аттачи"""
-    add_screenshot(page)
-    add_logs(page)
-    add_html(page)
+# def add_all(page: Page):
+#     """Добавить все аттачи"""
+#     add_screenshot(page)
+#     add_logs(page)
+#     add_html(page)

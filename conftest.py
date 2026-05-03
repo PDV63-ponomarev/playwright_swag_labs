@@ -23,8 +23,9 @@ def login_page(page: Page):
 
     return LoginPage()
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='function', autouse=True)
 def allure(page: Page, request):
-    attach.add_screenshot(page, name=f"screenshot_{request.node.name}")
-    attach.add_logs(page, name=f"logs_{request.node.name}")
-    attach.add_html(page, name=f"html_{request.node.name}")
+    yield page
+    attach.add_screenshot(page)
+    attach.add_logs(page)
+    # attach.add_html(page)
