@@ -44,9 +44,3 @@ def add_html(page: Page):
         attachment_type=AttachmentType.HTML,
         extension='.html'
     )
-
-# def add_all(page: Page):
-#     """Добавить все аттачи"""
-#     add_screenshot(page)
-#     add_logs(page)
-#     add_html(page)

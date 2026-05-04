@@ -28,4 +28,5 @@ def allure(page: Page, request):
     yield page
     attach.add_screenshot(page)
     attach.add_logs(page)
-    # attach.add_html(page)
+    attach.add_html(page)
+
