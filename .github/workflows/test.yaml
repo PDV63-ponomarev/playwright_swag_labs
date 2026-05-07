@@ -22,24 +22,26 @@ jobs:
       - name: run tests
         run: pytest
 
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: Get Allure history
         uses: actions/checkout@v4
-        if: always()
         continue-on-error: true
         with:
           ref: gh-pages
           path: gh-pages
-      - name: Allure Report action from marketplace
-        uses: simple-elf/allure-report-action@master
-        if: always()
+
+      - name: Allure Report action from repo
+        uses: ./
         with:
           allure_results: allure-results
           allure_history: allure-history
           keep_reports: 20
+
       - name: Deploy report to Github Pages
-        if: always()
         uses: peaceiris/actions-gh-pages@v4
-        env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
