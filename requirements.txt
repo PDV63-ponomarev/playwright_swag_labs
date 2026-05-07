@@ -1,2 +1,4 @@
 pytest-playwright
 allure-pytest
+playwright
+pytest
