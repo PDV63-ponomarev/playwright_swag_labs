@@ -28,15 +28,7 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: UploaAd Allure results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: allure-results
-          path: allure-results
-          retention-days: 30
-
-      - name: Get Allure history
+      - name: Load Allure report history
         uses: actions/checkout@v4
         if: always()
         continue-on-error: true
@@ -44,30 +36,20 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: Install Allure
-        run: |
-          curl -sL https://allurereport.org/downloads/2.27.0/allure_2.27.0-1_all.deb -o allure.deb
-          sudo dpkg -i allure.deb || true
-          sudo apt-get install -f -y
-          allure --version
-
       - name: Generate Allure Report
-        if: always()
-        run: |
-          if [ -d "gh-pages" ]; then
-            cp -r gh-pages/history allure-results/ || true
-          fi
-          allure generate allure-results -o allure-report --clean
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: simple-elf/allure-report-action@master
         if: always()
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-report
-          keep_files: false
+          allure_results: allure-results
+          allure_history: allure-history
 
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        if: always()
+        with:
+          branch: gh-pages
+          folder: allure-history
+          token: ${{ secrets.GITHUB_TOKEN }}
 
 ############
 #      - name: Checkout repo
