@@ -1,0 +1,1 @@
+[log] Playwright log capture started

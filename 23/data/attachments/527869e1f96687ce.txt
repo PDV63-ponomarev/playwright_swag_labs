@@ -1,0 +1,2 @@
+[log] Playwright log capture started
+[log] Content is cached for offline use.
